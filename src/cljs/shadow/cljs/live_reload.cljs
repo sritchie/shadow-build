@@ -20,12 +20,7 @@
   )
 
 (defn handle-changes [{:keys [public-path before-load after-load] :as config} {:keys [js] :as changes}]
-  (let [js-to-reload (->> js
-                          ;; only reload things we actually require'd somewhere
-                          (filter (fn [{:keys [provides]}]
-                                    (some #(js/goog.isProvided_ (str %)) provides)))
-                          (into []))]
-
+  (let [js-to-reload (into [] js)]
     (when (seq js-to-reload)
       (when before-load
         (let [fn (js/goog.getObjectByName before-load)]
@@ -75,4 +70,3 @@
 
 ;; shadow.cljs.api/build-dev will append a
 ;; (setup my-config) here
-
